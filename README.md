@@ -1,5 +1,5 @@
 # MultiLayer Network with two hidden layers console application
-This is a console application which is cappable of understanding from the given by Mnist dataset of pictures (28x28), to understand the numbers on it using sigmoid Activation function and Backpropagation method in order to improve the accuracy by changing the edges using Chain Rule 
+This is a console application which is capable of understanding from the given by Mnist dataset of pictures (28x28), to understand the numbers on it using sigmoid Activation function and Backpropagation method in order to improve the accuracy by changing the edges using Chain Rule 
 ## Functions Used:
 ### Sigmoid activasion function used
 ![image](https://github.com/user-attachments/assets/721eb129-c9fb-40f5-a673-01ae34787c84)
