@@ -1,8 +1,6 @@
-from Logic.ReaderL import ReaderL
-from Logic.Neuron import Neuron
-import tensorflow as tf
 import matplotlib.pyplot as plt
-
+from Logic.Neuron import Neuron
+from Logic.ReaderL import ReaderL
 
 class Layer:
     def __init__(self, num_neurons, num_inputs):
@@ -26,14 +24,10 @@ class Layer:
                 neuron.weights[j] += learning_rate * neuron.delta * neuron.inputs[j]
             neuron.bias += learning_rate * neuron.delta
 
-
 class NeuralNetwork:
     def __init__(self, layer_sizes):
         self.layers = [Layer(layer_sizes[i], layer_sizes[i-1]) for i in range(1, len(layer_sizes))]
         self.accuracy_history = []
-        self.loss_history = []
-        self.log_dir = "logs"
-        self.summary_writer = tf.summary.create_file_writer(self.log_dir)
 
     def forward_propagation(self, inputs):
         for layer in self.layers:
@@ -48,30 +42,16 @@ class NeuralNetwork:
     def train(self, data, labels, epochs, learning_rate):
         for epoch in range(epochs):
             correct = 0
-            total_loss = 0
             for inputs, expected in zip(data, labels):
                 outputs = self.forward_propagation(inputs)
                 predicted = outputs.index(max(outputs))
                 correct += (predicted == expected)
-                
                 expected_output = [0] * 10
                 expected_output[expected] = 1
-
-                loss = sum((eo - o) ** 2 for eo, o in zip(expected_output, outputs)) / len(outputs)
-                total_loss += loss
-
                 self.backpropagate(expected_output, learning_rate)
-
-            accuracy = correct / len(data)
-            avg_loss = total_loss / len(data)
+            accuracy = correct / len(data) * 100
             self.accuracy_history.append(accuracy)
-            self.loss_history.append(avg_loss)
-
-            with self.summary_writer.as_default():
-                tf.summary.scalar("Accuracy", accuracy, step=epoch)
-                tf.summary.scalar("Loss", avg_loss, step=epoch)
-
-            print(f"Epoch {epoch+1}: Accuracy = {accuracy * 100:.2f}%, Loss = {avg_loss:.4f}")
+            print(f"Epoch {epoch+1}: Accuracy = {accuracy:.2f}%")
 
     def test(self, data, labels):
         correct = 0
@@ -82,22 +62,12 @@ class NeuralNetwork:
         return correct / len(data)
 
     def plot_metrics(self):
-        plt.figure(figsize=(12, 5))
-
-        plt.subplot(1, 2, 1)
-        plt.plot(self.accuracy_history, label="Accuracy", color="blue")
-        plt.xlabel("Epoch")
-        plt.ylabel("Accuracy")
-        plt.legend()
-
-        plt.subplot(1, 2, 2)
-        plt.plot(self.loss_history, label="Loss", color="red")
-        plt.xlabel("Epoch")
-        plt.ylabel("Loss")
-        plt.legend()
-
+        plt.plot(range(1, len(self.accuracy_history) + 1), self.accuracy_history)
+        plt.title('Training Accuracy over Epochs')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy (%)')
+        plt.grid(True)
         plt.show()
-
 
 # Example usage:
 def main():
@@ -106,12 +76,10 @@ def main():
 
     nn = NeuralNetwork([784, 16, 16, 10])
     nn.train(train_data, train_labels, epochs=200, learning_rate=0.1)
-
     accuracy = nn.test(test_data, test_labels)
     print(f"Test Accuracy: {accuracy * 100:.2f}%")
-
+    
     nn.plot_metrics()
-
 
 if __name__ == "__main__":
     main()
