@@ -4,7 +4,7 @@ This is a console application which is capable of understanding from the given b
 ### Sigmoid activation function used
 ![image](https://github.com/user-attachments/assets/721eb129-c9fb-40f5-a673-01ae34787c84)
 
-### Backpropagation method used using Chain Rule
+### Backpropagation method used using Gradient Decent
 ![image](https://github.com/user-attachments/assets/7f0bc5c6-6b4c-4d6b-82fd-6c2a613e5d9c)
 
 ## Improvement of accuracy in 200 epochs 
